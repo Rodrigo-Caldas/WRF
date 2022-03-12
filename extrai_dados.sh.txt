@@ -1,0 +1,220 @@
+#!/bin/bash
+
+export SCRIPTS=/home/lammoc/figuras
+export VOLUME=/home/lammoc/docker/volumes/namelist_volume/operacional
+#%%%%%%%%%%%%%%%%% configura as datas necessarias %%%%%%%%%%%%%%%%%%%%%%%%%
+ano=`grep "start_year" $VOLUME/namelist.input | awk '{ print $3 }'`
+ANO_HOJE=`echo $ano | cut -d',' -f1`
+mes=`grep "start_month" $VOLUME/namelist.input | awk '{ print $3 }'`
+MES_HOJE=`echo $mes | cut -d',' -f1`
+dia=`grep "start_day" $VOLUME/namelist.input | awk '{ print $3 }'`
+DIA_HOJE=`echo $dia | cut -d',' -f1`
+
+export ANO_HOJE=$ANO_HOJE
+export MES_HOJE=$MES_HOJE
+export DIA_HOJE=$DIA_HOJE
+
+RODADA=00
+
+export ARWPOST=/home/lammoc/docker/volumes/WRF_out_volume
+
+# Define padrão da saida para a planilha final
+header="%-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
+format="%8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s"
+
+# Cria um arq TXT e add um cabecalho para as colunas.
+printf "$header" "TEMPO" "LON" "LAT" "U10m" "V10m" "VEL10m" "DIR10m" "U900hPa" "V900hPa" "VEL900hPa" "DIR900hPa"  > bab"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+
+printf "$header" "TEMPO" "LON" "LAT" "U10m" "V10m" "VEL10m" "DIR10m" "U900hPa" "V900hPa" "VEL900hPa" "DIR900hPa"  > fl"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+
+printf "$header" "TEMPO" "LON" "LAT" "U10m" "V10m" "VEL10m" "DIR10m" "U900hPa" "V900hPa" "VEL900hPa" "DIR900hPa"  > rio"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+
+printf "$header" "TEMPO" "LON" "LAT" "U10m" "V10m" "VEL10m" "DIR10m" "U900hPa" "V900hPa" "VEL900hPa" "DIR900hPa"  > gam"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+
+echo "
+'open $ARWPOST/"$ANO_HOJE"-"$MES_HOJE"-"$DIA_HOJE"_"$RODADA":00:00_d01.ctl'
+
+*AREA BABILONIA
+
+t=1
+while(t<=81)
+'set t 't
+data=t
+arqtxt=bab"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+x=355
+while(x<=356)
+'set x 'x
+y=250
+while(y<=252)
+'set y 'y
+'q dims'
+lon2=sublin(result,2)
+lon=subwrd(lon2,6)
+lat2=sublin(result,3)
+lat=subwrd(lat2,6)
+'set z 1'
+'d u10'
+val=subwrd (result,4)
+'d v10'
+val2=subwrd (result,4)
+'d ws10'
+val3=subwrd (result,4)
+'d wd10'
+val4=subwrd (result,4)
+'set z 3'
+'d u'
+val5=subwrd (result,4)
+'d v'
+val6=subwrd (result,4)
+'d wspd'
+val7=subwrd (result,4)
+'d wdir'
+val8=subwrd (result,4)
+print=' ' data ' ' lon ' ' lat ' ' val ' ' val2 ' ' val3 ' ' val4 ' ' val5 ' ' val6 ' ' val7 ' ' val8
+write(arqtxt,print,append)
+y=y+1
+endwhile
+x=x+1
+endwhile
+t=t+1
+endwhile
+
+
+*AREA FOLHA LARGA
+
+t=1
+while(t<=81)
+'set t 't
+data=t
+arqtxt=fl"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+x=362
+while(x<=363)
+'set x 'x
+y=256
+while(y<=257)
+'set y 'y
+'q dims'
+lon2=sublin(result,2)
+lon=subwrd(lon2,6)
+lat2=sublin(result,3)
+lat=subwrd(lat2,6)
+'set z 1'
+'d u10'
+val=subwrd (result,4)
+'d v10'
+val2=subwrd (result,4)
+'d ws10'
+val3=subwrd (result,4)
+'d wd10'
+val4=subwrd (result,4)
+'set z 3'
+'d u'
+val5=subwrd (result,4)
+'d v'
+val6=subwrd (result,4)
+'d wspd'
+val7=subwrd (result,4)
+'d wdir'
+val8=subwrd (result,4)
+print=' ' data ' ' lon ' ' lat ' ' val ' ' val2 ' ' val3 ' ' val4 ' ' val5 ' ' val6 ' ' val7 ' ' val8
+write(arqtxt,print,append)
+y=y+1
+endwhile
+x=x+1
+endwhile
+t=t+1
+endwhile
+
+
+*AREA RIO DO VENTO
+
+t=1
+while(t<=81)
+'set t 't
+data=t
+arqtxt=rio"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+x=400
+while(x<=401)
+'set x 'x
+y=300
+while(y<=301)
+'set y 'y
+'q dims'
+lon2=sublin(result,2)
+lon=subwrd(lon2,6)
+lat2=sublin(result,3)
+lat=subwrd(lat2,6)
+'set z 1'
+'d u10'
+val=subwrd (result,4)
+'d v10'
+val2=subwrd (result,4)
+'d ws10'
+val3=subwrd (result,4)
+'d wd10'
+val4=subwrd (result,4)
+'set z 3'
+'d u'
+val5=subwrd (result,4)
+'d v'
+val6=subwrd (result,4)
+'d wspd'
+val7=subwrd (result,4)
+'d wdir'
+val8=subwrd (result,4)
+print=' ' data ' ' lon ' ' lat ' ' val ' ' val2 ' ' val3 ' ' val4 ' ' val5 ' ' val6 ' ' val7 ' ' val8
+write(arqtxt,print,append)
+y=y+1
+endwhile
+x=x+1
+endwhile
+t=t+1
+endwhile
+
+
+*AREA GAMELEIRAS
+
+t=1
+while(t<=81)
+'set t 't
+data=t
+arqtxt=gam"$ANO_HOJE""$MES_HOJE""$DIA_HOJE".txt
+x=404
+while(x<=406)
+'set x 'x
+y=293
+while(y<=294)
+'set y 'y
+'q dims'
+lon2=sublin(result,2)
+lon=subwrd(lon2,6)
+lat2=sublin(result,3)
+lat=subwrd(lat2,6)
+'set z 1'
+'d u10'
+val=subwrd (result,4)
+'d v10'
+val2=subwrd (result,4)
+'d ws10'
+val3=subwrd (result,4)
+'d wd10'
+val4=subwrd (result,4)
+'set z 3'
+'d u'
+val5=subwrd (result,4)
+'d v'
+val6=subwrd (result,4)
+'d wspd'
+val7=subwrd (result,4)
+'d wdir'
+val8=subwrd (result,4)
+print=' ' data ' ' lon ' ' lat ' ' val ' ' val2 ' ' val3 ' ' val4 ' ' val5 ' ' val6 ' ' val7 ' ' val8
+write(arqtxt,print,append)
+y=y+1
+endwhile
+x=x+1
+endwhile
+t=t+1
+endwhile
+
+" > $SCRIPTS/extrai_dados.gs
